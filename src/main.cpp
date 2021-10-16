@@ -37,6 +37,11 @@ char* ReadMessageWithLength(int length)
 {
 
   char Message[length];
+if(length == 1)
+{
+  Message[0] = (char)Serial.read();
+  return Message;
+}
   int count = 0;
   char Character = ' ';
   char NextCharacter = ' ';
@@ -83,6 +88,7 @@ char* EnvelopeWait()
       }
       break;
     case ReadMessage:
+      es = FindStart;
       return ReadMessageWithLength(Length);
     default:
       break;
@@ -91,11 +97,13 @@ char* EnvelopeWait()
 
 void loop()
 {
+
+  Message = EnvelopeWait();
   
   if(millis() - currentTime > 1000)
   {
     
-    Message = EnvelopeWait();
+    
     if(Message != ExpectedMessage)
     {
       disconnectCount++;
